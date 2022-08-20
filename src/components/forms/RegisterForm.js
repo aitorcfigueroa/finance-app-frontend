@@ -14,17 +14,50 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Copyright } from '../copyright/CopyRight';
 
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+import { register } from '../../services/authService'
+
 const theme = createTheme();
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+const registerSchema = Yup.object().shape(
+  {
+    name: Yup.string().required('Name is required'),
+    lastname: Yup.string().required('Lastname is required'),
+    email: Yup.string().email('Invalid Email Format').required('Email is required'),
+    password: Yup.string().min(8, 'Password should be of minimum 8 characters length').required('Password is required'),
+    confirm: Yup.string().when('password', {
+      is: (value) => (value && value.length > 0 ? true : false),
+      then: Yup.string().oneOf([Yup.ref('password')], 'Password must match')
+    }).required('You must confirm your password')
+  }
+);
+
+export default function RegisterForm() {
+  const handleSubmit = async (values) => {
+    register(values.name, values.lastname, values.email, values.password).then((response) => {
+      if (response.status === 200) {
+        console.log('User registered correctly');
+        console.log(response.data);
+        alert('User registered correctly');
+      } else {
+        throw new Error('Error in registry');
+      }
+    }).catch((error) => {console.error(`[REGISTER ERROR]: ${error}`)})
   };
+
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      lastname: '',
+      email: '',
+      password: '',
+      confirm: ''
+    },
+    validationSchema: registerSchema,
+    onSubmit: handleSubmit
+  })
 
   return (
     <ThemeProvider theme={theme}>
@@ -60,7 +93,7 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -71,6 +104,10 @@ export default function SignInSide() {
                     id="name"
                     label="Name"
                     autoFocus
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -82,7 +119,10 @@ export default function SignInSide() {
                     id="lastname"
                     label="Lastname"
                     type='string'
-                    inputProps={{ pattern: '[0-9]*', min: 0, max: 99}}
+                    value={formik.values.lastname}
+                    onChange={formik.handleChange}
+                    error={formik.touched.lastname && Boolean(formik.errors.lastname)}
+                    helperText={formik.touched.lastname && formik.errors.lastname}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -93,6 +133,10 @@ export default function SignInSide() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -104,14 +148,32 @@ export default function SignInSide() {
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
                   />
                 </Grid>
                 <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirm"
+                    label="Confirm Password"
+                    type="password"
+                    id="confirm"
+                    value={formik.values.confirm}
+                    onChange={formik.handleChange}
+                    error={formik.touched.confirm && Boolean(formik.errors.confirm)}
+                    helperText={formik.touched.confirm && formik.errors.confirm}
+                  />
+                </Grid>
+                {/* <Grid item xs={12}>
                   <FormControlLabel
                     control={<Checkbox value="allowExtraEmails" color="primary" />}
                     label="I want to receive inspiration, marketing promotions and updates via email."
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
               <Button
                 type="submit"

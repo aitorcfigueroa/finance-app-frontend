@@ -10,7 +10,7 @@ export const AppRoutes = () => {
       <Route path='/login' element={<LoginPage />}></Route>
       <Route path='/register' element={<RegisterPage />}></Route>
       {/* Redirect when Page Not Found */}
-      <Route path='*' element={<Navigate to='/' replace/>}></Route>
+      <Route path='*' element={<Navigate to='/login' replace/>}></Route>
     </Routes>
   )
 }
