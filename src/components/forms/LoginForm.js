@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Copyright } from '../copyright/CopyRight';
 
 import { login } from '../../services/authService';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -26,16 +26,17 @@ const loginSchema = Yup.object().shape(
     email: Yup.string().email('Invalid Email Format').required('Email is required'),
     password: Yup.string().required('Password is required')
   }
-);
-
+  );
+  
 export default function LoginForm() {
+  const navigate = useNavigate()
+  
   const handleSubmit = async (values) => {
     login(values.email, values.password).then(async (response) => {
       if (response.status === 200) {
         if (response.data.token) {
           await sessionStorage.setItem('sessionJWTToken', response.data.token);
-          console.log('autenticate')
-          Navigate(`/${response.data.id}`);
+          navigate(`/${response.data.id}`);
         } else {
           throw new Error('Error generating Login Token');
         }
