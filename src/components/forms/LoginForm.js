@@ -14,17 +14,45 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Copyright } from '../copyright/CopyRight';
 
+import { login } from '../../services/authService';
+import { Navigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
 const theme = createTheme();
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+const loginSchema = Yup.object().shape(
+  {
+    email: Yup.string().email('Invalid Email Format').required('Email is required'),
+    password: Yup.string().required('Password is required')
+  }
+);
+
+export default function LoginForm() {
+  const handleSubmit = async (values) => {
+    login(values.email, values.password).then(async (response) => {
+      if (response.status === 200) {
+        if (response.data.token) {
+          await sessionStorage.setItem('sessionJWTToken', response.data.token);
+          console.log('autenticate')
+          Navigate(`/${response.data.id}`);
+        } else {
+          throw new Error('Error generating Login Token');
+        }
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    }).catch((error) => console.error(`[LOGIN ERROR] ${error}`))
   };
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validationSchema: loginSchema,
+    onSubmit: handleSubmit
+  })
 
   return (
     <ThemeProvider theme={theme}>
@@ -60,16 +88,20 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.name)}
+                helperText={formik.touched.email && formik.errors.email}
               />
               <TextField
                 margin="normal"
@@ -80,6 +112,10 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                helperText={formik.touched.password && formik.errors.password}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -95,7 +131,7 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="#" variant="body2"> {/* TODO: redireccionar a página para enviar un email al usuario para recuperar contraseña. */}
                     Forgot password?
                   </Link>
                 </Grid>
