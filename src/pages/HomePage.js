@@ -1,7 +1,10 @@
 import React from "react";
+import { ProfileMenu } from "../components/home/profile";
 
 export const HomePage = () => {
   return (
-    <h1>Bienvenido</h1>
+    <div>
+      <ProfileMenu />
+    </div>
   )
 }

@@ -1,17 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import HomeIcon from '@mui/icons-material/HomeIcon';
+import HomeIcon from '@mui/icons-material/Home';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-// TODO: Petición para recibir los datos personales Nombre, ID, DOB
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useSessionStorage } from '../../hooks/useSessionStorage';
+import { userInfo } from '../../services/userService';
 
 export const ProfileMenu = () => {
+
+  const loggedIn = useSessionStorage('sessionJWTToken');
+  const hashedId = useSessionStorage('sessionId');
+  const { id } = useParams()
+  const navigate = useNavigate();
+  let cardId = id.replace(/\D+/g, "").match(/.{1,4}/g).join(' ').substring(0, 19);
+
+  const [user, setUser] = useState({name: 'John', lastname: 'Doe', dob: '16/03'});
+  console.log(hashedId)
+
+  useEffect(() => {
+    if(!loggedIn || !hashedId || !id) {
+      return navigate('/login');
+    } else {
+      userInfo(loggedIn, hashedId, id).then((response) => {
+        if (response.status === 200 && response.data) {
+          let date = new Date(response.data.dob).getDate();
+          let month = new Date(response.data.dob).getMonth();
+
+          let userInfo = {
+            name: response.data.name,
+            lastname: response.data.lastname,
+            dob: date + '/' + month
+          }
+          
+          setUser(userInfo);
+        } else {
+          throw new Error(`[Error Obtaining User Info] ${response.data}`)
+        }
+      }).catch((error) => console.error(`[USER INFO] ${error}`))
+    }
+  }, [loggedIn, hashedId, id, navigate]);
+  
   return (
     <Box
       sx={{
@@ -22,7 +59,7 @@ export const ProfileMenu = () => {
         alignItems: 'center',
       }}
     >
-      <Paper elevation={3} sx={{backgroundColor: "skyblue", p: 3, height: 160, borderRadius: 5}}>
+      <Paper elevation={3} sx={{backgroundColor: "aqua", p: 3, height: 170, borderRadius: 5, marginBottom: 4}}>
         <Grid 
           container 
           sx={{height: "100%"}} 
@@ -32,18 +69,18 @@ export const ProfileMenu = () => {
           <Grid container item sx={{px:1, gap: 1}}>
             <Grid item>
               <Typography>
-                0000 0000 0000 0000
+                {cardId}
               </Typography>
             </Grid>
             <Grid item container justifyContent="space-between">
               <Grid item>
                 <Typography>
-                  Aitor Couñago
+                  {user.name + ' ' + user.lastname}
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography>
-                  08/12
+                  {user.dob}
                 </Typography>
               </Grid>
             </Grid>
@@ -73,6 +110,12 @@ export const ProfileMenu = () => {
           <Button sx={{gap: 1}}>
             <SettingsIcon />
             Configuration
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button sx={{gap: 1}}>
+            <LogoutIcon />
+            Log Out
           </Button>
         </Grid>
       </Grid>

@@ -36,6 +36,7 @@ export default function LoginForm() {
       if (response.status === 200) {
         if (response.data.token) {
           await sessionStorage.setItem('sessionJWTToken', response.data.token);
+          await sessionStorage.setItem('sessionId', response.data.hashedId);
           navigate(`/${response.data.id}`);
         } else {
           throw new Error('Error generating Login Token');
