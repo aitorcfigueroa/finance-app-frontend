@@ -24,7 +24,6 @@ export const ProfileMenu = () => {
   let cardId = id.replace(/\D+/g, "").match(/.{1,4}/g).join(' ').substring(0, 19);
 
   const [user, setUser] = useState({name: 'John', lastname: 'Doe', dob: '16/03'});
-  console.log(hashedId)
 
   useEffect(() => {
     if(!loggedIn || !hashedId || !id) {
@@ -49,6 +48,17 @@ export const ProfileMenu = () => {
     }
   }, [loggedIn, hashedId, id, navigate]);
   
+  const handleLogout = () => {
+    if (window.sessionStorage) {
+      sessionStorage.removeItem('sessionJWTToken');
+      sessionStorage.removeItem('sessionId');
+    } else {
+      throw new Error('Error deleting session storage');
+    }
+
+    navigate('/login');
+  }
+
   return (
     <Box
       sx={{
@@ -112,8 +122,8 @@ export const ProfileMenu = () => {
             Configuration
           </Button>
         </Grid>
-        <Grid item>
-          <Button sx={{gap: 1}}>
+        <Grid item >
+          <Button sx={{gap: 1}} onClick={handleLogout}>
             <LogoutIcon />
             Log Out
           </Button>
