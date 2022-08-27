@@ -13,3 +13,17 @@ export const userInfo = (token, hashid, id) => {
   
   return axios.get('/user/me', options)
 }
+
+export const userGlobalData = (token, hashid, id) => {
+  const options = {
+    headers: {
+      'x-access-token': token,
+      'sessionid': hashid
+    },
+    params: {
+      id
+    }
+  }
+
+  return axios.get('/user/global', options)
+}

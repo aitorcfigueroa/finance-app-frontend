@@ -13,6 +13,7 @@ import Paper from '@mui/material/Paper';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { ProfileMenu } from './profile';
 import { Copyright } from '../copyright/CopyRight';
+import Chart from './Chart';
 
 const drawerWidth = 400;
 
@@ -80,33 +81,34 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12} md={8} lg={8}>
                 <Paper
                   sx={{
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: '50vh',
                   }}
                 >
+                  <Chart />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
+              {/* Totals */}
+              <Grid item xs={12} md={4} lg={4}>
                 <Paper
                   sx={{
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: '50vh',
                   }}
                 >
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
+              {/* Accounts */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                 </Paper>

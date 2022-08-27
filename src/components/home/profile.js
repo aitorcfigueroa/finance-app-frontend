@@ -20,7 +20,7 @@ export const ProfileMenu = () => {
 
   const loggedIn = useSessionStorage('sessionJWTToken');
   const hashedId = useSessionStorage('sessionId');
-  const { id } = useParams()
+  const { id } = useParams();
   const navigate = useNavigate();
   let cardId = id.replace(/\D+/g, "").match(/.{1,4}/g).join(' ').substring(0, 19);
 
