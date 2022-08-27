@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import HomeIcon from '@mui/icons-material/Home';
@@ -69,7 +70,7 @@ export const ProfileMenu = () => {
         alignItems: 'center',
       }}
     >
-      <Paper elevation={3} sx={{backgroundColor: "aqua", p: 3, height: 170, borderRadius: 5, marginBottom: 4}}>
+      <Paper elevation={3} sx={{backgroundColor: "aqua", p: 3, height: 180, borderRadius: 5, marginBottom: 4}}>
         <Grid 
           container 
           sx={{height: "100%"}} 
@@ -97,35 +98,36 @@ export const ProfileMenu = () => {
           </Grid>
         </Grid>
       </Paper>
-      <Grid container sx={{ maxWidth: 300, p: 1, gap: 3}} direction="column" alignItems="flex-start">
+      <Divider sx={{ my: 1 }} />
+      <Grid container sx={{ maxWidth: 300, p: 1, gap:0}} direction="column" alignItems="flex-start">
         <Grid item>
-          <Button sx={{gap: 1}}>
+          <Button sx={{gap: 3}}>
             <HomeIcon />
-            Home
+            <h3>Home</h3>
           </Button>
         </Grid>
         <Grid item>
-          <Button sx={{gap: 1}}>
+          <Button sx={{gap: 3}}>
             <DashboardIcon />
-            Details
+            <h3>Details</h3>
           </Button>
         </Grid>
         <Grid item>
-          <Button sx={{gap: 1}}>
+          <Button sx={{gap: 3}}>
             <ReorderIcon />
-            Movements
+            <h3>Movements</h3>
           </Button>
         </Grid>
         <Grid item>
-          <Button sx={{gap: 1}}>
+          <Button sx={{gap: 3}}>
             <SettingsIcon />
-            Configuration
+            <h3>Configuration</h3>
           </Button>
         </Grid>
         <Grid item >
-          <Button sx={{gap: 1}} onClick={handleLogout}>
+          <Button sx={{gap: 3}} color='error' onClick={handleLogout}>
             <LogoutIcon />
-            Log Out
+            <h3>Log Out</h3>
           </Button>
         </Grid>
       </Grid>

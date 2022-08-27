@@ -1,10 +1,10 @@
 import React from "react";
-import { ProfileMenu } from "../components/home/profile";
+import DashboardContent from '../components/home/Dashboard'
 
 export const HomePage = () => {
   return (
     <div>
-      <ProfileMenu />
+      <DashboardContent />
     </div>
   )
 }
