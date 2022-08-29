@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -14,6 +14,16 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { ProfileMenu } from './profile';
 import { Copyright } from '../copyright/CopyRight';
 import Chart from './Chart';
+import Totals from './Totals';
+
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useSessionStorage } from '../../hooks/useSessionStorage';
+import { userGlobalData } from '../../services/userService';
+
+import sinfulMath from 'sinful-math.js';
+
+const add = sinfulMath.add;
 
 const drawerWidth = 400;
 
@@ -38,6 +48,80 @@ const AppBar = styled(MuiAppBar, {
 const mdTheme = createTheme();
 
 function DashboardContent() {
+
+  const loggedIn = useSessionStorage('sessionJWTToken');
+  const hashedId = useSessionStorage('sessionId');
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [data, setData] = useState();
+  const [totals, setTotals] = useState([{name: 'Income', amount: 0}, {name: 'Outcome', amount: 0}, {name: 'Total', amount: 0}]);
+  const [accounts, setAccounts] = useState();
+
+  useEffect(() => {
+    if(!loggedIn || !hashedId || !id) {
+      return navigate('/login');
+    } else {
+      userGlobalData(loggedIn, hashedId, id).then((response) => {
+        if (response.status === 200 && response.data) {
+          if (response.data.movements) {
+            const monthArr = Object.keys(response.data.movements);
+            const monthData = [];
+            let totalIncome = 0;
+            let totalOutcome = 0;
+            let total = 0;
+  
+            for (let m in monthArr) {
+              let income = response.data.movements[monthArr[m]].income;
+              let outcome = response.data.movements[monthArr[m]].outcome;
+              let dif = add(income, -outcome);
+
+              totalIncome = add(totalIncome, income);
+              totalOutcome = add(totalOutcome, outcome);
+              total = add(total, dif);
+              console.log(totalIncome, income);
+
+              let month = {
+                month: monthArr[m],
+                income: income,
+                outcome: outcome,
+                total: dif
+              }
+  
+              monthData.unshift(month);
+            }
+
+            let dataTotals = [{name: 'Income', amount: totalIncome}, {name: 'Outcome', amount: totalOutcome}, {name: 'Total', amount: total}];
+
+            setData(monthData);
+            setTotals(dataTotals);
+          }
+
+          if (response.data.accounts) {
+            const accArr = Object.keys(response.data.accounts);
+            const accData = [];
+
+            for (let a in accArr) {
+              let acc = {
+                account: accArr[a],
+                amount: response.data.accounts[accArr[a]]
+              }
+
+              accData.push(acc);
+            }
+
+            setAccounts(accData);
+          }
+
+        } else {
+          throw new Error(`[Error Obtaining User Info] ${response.data}`)
+        }
+      }).catch((error) => console.error(`[USER INFO] ${error}`))
+    }
+  }, [loggedIn, hashedId, id, navigate]);
+
+  console.log(totals);
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -93,7 +177,7 @@ function DashboardContent() {
                     height: '50vh',
                   }}
                 >
-                  <Chart />
+                  <Chart data={data} />
                 </Paper>
               </Grid>
               {/* Totals */}
@@ -104,8 +188,10 @@ function DashboardContent() {
                     display: 'flex',
                     flexDirection: 'column',
                     height: '50vh',
+                    pl: 5
                   }}
                 >
+                  <Totals totals={totals} />
                 </Paper>
               </Grid>
               {/* Accounts */}
@@ -114,8 +200,8 @@ function DashboardContent() {
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright />
           </Container>
+          <Copyright />
         </Box>
       </Box>
     </ThemeProvider>
