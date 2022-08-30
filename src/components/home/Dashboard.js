@@ -15,6 +15,7 @@ import { ProfileMenu } from './profile';
 import { Copyright } from '../copyright/CopyRight';
 import Chart from './Chart';
 import Totals from './Totals';
+import Accounts from './Accounts';
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -56,7 +57,7 @@ function DashboardContent() {
 
   const [data, setData] = useState();
   const [totals, setTotals] = useState([{name: 'Income', amount: 0}, {name: 'Outcome', amount: 0}, {name: 'Total', amount: 0}]);
-  const [accounts, setAccounts] = useState();
+  const [accounts, setAccounts] = useState([{account: 'Cash', amount: 0}]);
 
   useEffect(() => {
     if(!loggedIn || !hashedId || !id) {
@@ -79,7 +80,6 @@ function DashboardContent() {
               totalIncome = add(totalIncome, income);
               totalOutcome = add(totalOutcome, outcome);
               total = add(total, dif);
-              console.log(totalIncome, income);
 
               let month = {
                 month: monthArr[m],
@@ -99,6 +99,7 @@ function DashboardContent() {
 
           if (response.data.accounts) {
             const accArr = Object.keys(response.data.accounts);
+            console.log(response.data.accounts)
             const accData = [];
 
             for (let a in accArr) {
@@ -120,7 +121,7 @@ function DashboardContent() {
     }
   }, [loggedIn, hashedId, id, navigate]);
 
-  console.log(totals);
+  console.log(accounts);
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -148,7 +149,7 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Box sx={{ width: 400}} >
+        <Box sx={{ width: 600}} >
           <Toolbar />
           <ProfileMenu />
         </Box>
@@ -196,7 +197,8 @@ function DashboardContent() {
               </Grid>
               {/* Accounts */}
               <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Accounts accounts={accounts} />
                 </Paper>
               </Grid>
             </Grid>
