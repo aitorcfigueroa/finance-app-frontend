@@ -12,6 +12,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { ProfileMenu } from './profile';
 import { Copyright } from '../copyright/CopyRight';
 import Home from './Home';
+import Movements from './Movements';
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -52,12 +53,14 @@ function DashboardContent() {
     hashedId,
     id
   };
-
+  
   useEffect(() => {
     if(!loggedIn || !hashedId || !id) {
       return navigate('/login');
     } 
   }, [loggedIn, hashedId, id, navigate]);
+  
+  const [main, setMain] = useState(<Movements security={security}/>)
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -78,6 +81,7 @@ function DashboardContent() {
             >
               Be Constious Finance App
             </Typography>
+            {/* TODO: change to black mode toggle */}
             <IconButton color="inherit">
               <Badge badgeContent={0} color="secondary">
                 <NotificationsIcon />
@@ -85,7 +89,7 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Box sx={{ width: 600}} >
+        <Box sx={{ width: 400}} >
           <Toolbar />
           <ProfileMenu />
         </Box>
@@ -103,7 +107,7 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
-            <Home security={security}/>
+            {main}
           </Container>
           <Copyright />
         </Box>

@@ -67,7 +67,7 @@ export const ProfileMenu = () => {
         mx: 4,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'center'
       }}
     >
       <Paper elevation={3} sx={{backgroundColor: "aqua", p: 3, height: 180, borderRadius: 5, marginBottom: 4}}>
