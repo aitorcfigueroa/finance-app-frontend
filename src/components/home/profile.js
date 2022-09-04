@@ -10,19 +10,22 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Home from './Home';
+import Movements from './Movements';
 
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useSessionStorage } from '../../hooks/useSessionStorage';
 import { userInfo } from '../../services/userService';
 
-export const ProfileMenu = () => {
+export const ProfileMenu = (props) => {
 
   const loggedIn = useSessionStorage('sessionJWTToken');
   const hashedId = useSessionStorage('sessionId');
   const { id } = useParams();
   const navigate = useNavigate();
   let cardId = id.replace(/\D+/g, "").match(/.{1,4}/g).join(' ').substring(0, 19);
+  const fullWidthButton = {pl: 2, gap: 3, width: '100%', justifyContent:'flex-start'};
 
   const [user, setUser] = useState({name: 'John', lastname: 'Doe', dob: '16/03'});
 
@@ -64,13 +67,13 @@ export const ProfileMenu = () => {
     <Box
       sx={{
         my: 8,
-        mx: 4,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        minWidth: 300
       }}
     >
-      <Paper elevation={3} sx={{backgroundColor: "aqua", p: 3, height: 180, borderRadius: 5, marginBottom: 4}}>
+      <Paper elevation={3} sx={{backgroundColor: "aqua", p: 3, height: 180, borderRadius: 5, marginBottom: 4, maxWidth: 300}}>
         <Grid 
           container 
           sx={{height: "100%"}} 
@@ -100,36 +103,26 @@ export const ProfileMenu = () => {
       </Paper>
       <Divider sx={{ my: 1 }} />
       <Grid container sx={{ maxWidth: 300, p: 1, gap:0}} direction="column" alignItems="flex-start">
-        <Grid item>
-          <Button sx={{gap: 3}}>
-            <HomeIcon />
-            <h3>Home</h3>
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button sx={{gap: 3}}>
-            <DashboardIcon />
-            <h3>Details</h3>
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button sx={{gap: 3}}>
-            <ReorderIcon />
-            <h3>Movements</h3>
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button sx={{gap: 3}}>
-            <SettingsIcon />
-            <h3>Configuration</h3>
-          </Button>
-        </Grid>
-        <Grid item >
-          <Button sx={{gap: 3}} color='error' onClick={handleLogout}>
-            <LogoutIcon />
-            <h3>Log Out</h3>
-          </Button>
-        </Grid>
+        <Button sx={fullWidthButton} onClick={() => props.clickHandler('home')}>
+          <HomeIcon />
+          <h3>Home</h3>
+        </Button>
+        <Button sx={fullWidthButton} onClick={() => props.clickHandler('details')}>
+          <DashboardIcon />
+          <h3>Details</h3>
+        </Button>
+        <Button sx={fullWidthButton} onClick={() => props.clickHandler('movements')}>
+          <ReorderIcon />
+          <h3>Movements</h3>
+        </Button>
+        <Button sx={fullWidthButton} onClick={() => props.clickHandler('configuration')}>
+          <SettingsIcon />
+          <h3>Configuration</h3>
+        </Button>
+        <Button sx={fullWidthButton} color='error' onClick={handleLogout}>
+          <LogoutIcon />
+          <h3>Log Out</h3>
+        </Button>
       </Grid>
     </Box>
   )

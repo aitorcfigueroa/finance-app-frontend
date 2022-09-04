@@ -11,6 +11,9 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import InputAdornment from '@mui/material/InputAdornment';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Chart from './Chart';
 import Totals from './Totals';
@@ -18,7 +21,6 @@ import Accounts from './Accounts';
 
 import { useNavigate } from 'react-router-dom';
 import { userGlobalData } from '../../services/userService';
-import { InputLabel, OutlinedInput, Typography } from '@mui/material';
 
 const add = sinfulMath.add;
 
@@ -101,7 +103,7 @@ export default function Movements(props) {
             <Grid item xs={0.5}>
               <Typography component='h1' variant='h5'>Add</Typography>
             </Grid>
-            <Grid item xs={0.65}>   
+            <Grid item xs={0.5}>   
               <TextField
                 id="day"
                 label="Day"

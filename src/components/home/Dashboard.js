@@ -60,7 +60,27 @@ function DashboardContent() {
     } 
   }, [loggedIn, hashedId, id, navigate]);
   
-  const [main, setMain] = useState(<Movements security={security}/>)
+  const [main, setMain] = useState(<Home security={security}/>)
+
+  const handleClick = (event) => {
+    switch (event){
+      case 'home':
+        setMain(<Home security={security}/>);
+        break;
+      // case 'details':
+      //   setMain(<Details security={security}/>);
+      //   break;
+      case 'movements':
+        setMain(<Movements security={security}/>);
+        break;
+      // case 'configuration':
+      //   setMain(<Configuration security={security}/>);
+      //   break;
+      default:
+        setMain(<Home security={security}/>);
+        break;
+    }
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -79,7 +99,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Be Constious Finance App
+              Be Conscious Finance App
             </Typography>
             {/* TODO: change to black mode toggle */}
             <IconButton color="inherit">
@@ -89,9 +109,9 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Box sx={{ width: 400}} >
+        <Box sx={{ minWidth: 350}} >
           <Toolbar />
-          <ProfileMenu />
+          <ProfileMenu clickHandler={handleClick}/>
         </Box>
         <Box
           component="main"
