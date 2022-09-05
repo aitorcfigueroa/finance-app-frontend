@@ -8,7 +8,7 @@ import Totals from './Totals';
 import Accounts from './Accounts';
 
 import { useNavigate } from 'react-router-dom';
-import { userGlobalData } from '../../services/userService';
+import { userGlobalData } from '../../../../services/userService';
 
 const add = sinfulMath.add;
 

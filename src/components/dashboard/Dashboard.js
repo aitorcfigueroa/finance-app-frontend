@@ -9,10 +9,12 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { ProfileMenu } from './profile';
+import { ProfileMenu } from './Profile';
 import { Copyright } from '../copyright/CopyRight';
-import Home from './Home';
-import Movements from './Movements';
+import Home from './pages/home/Home';
+import Movements from './pages/movements/Movements';
+import Configuration from './pages/configuration/Configuration';
+import Details from './pages/details/Details';
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -67,15 +69,15 @@ function DashboardContent() {
       case 'home':
         setMain(<Home security={security}/>);
         break;
-      // case 'details':
-      //   setMain(<Details security={security}/>);
-      //   break;
+      case 'details':
+        setMain(<Details security={security}/>);
+        break;
       case 'movements':
         setMain(<Movements security={security}/>);
         break;
-      // case 'configuration':
-      //   setMain(<Configuration security={security}/>);
-      //   break;
+      case 'configuration':
+        setMain(<Configuration security={security}/>);
+        break;
       default:
         setMain(<Home security={security}/>);
         break;

@@ -10,8 +10,6 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Home from './Home';
-import Movements from './Movements';
 
 import { useNavigate, useParams } from "react-router-dom";
 
