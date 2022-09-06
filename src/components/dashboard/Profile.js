@@ -113,9 +113,9 @@ export const ProfileMenu = (props) => {
           <ReorderIcon />
           <h3>Movements</h3>
         </Button>
-        <Button sx={fullWidthButton} onClick={() => props.clickHandler('configuration')}>
+        <Button sx={fullWidthButton} onClick={() => props.clickHandler('settings')}>
           <SettingsIcon />
-          <h3>Configuration</h3>
+          <h3>Settings</h3>
         </Button>
         <Button sx={fullWidthButton} color='error' onClick={handleLogout}>
           <LogoutIcon />

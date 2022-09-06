@@ -13,7 +13,7 @@ import { ProfileMenu } from './Profile';
 import { Copyright } from '../copyright/CopyRight';
 import Home from './pages/home/Home';
 import Movements from './pages/movements/Movements';
-import Configuration from './pages/configuration/Configuration';
+import Settings from './pages/settings/Settings';
 import Details from './pages/details/Details';
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -75,8 +75,8 @@ function DashboardContent() {
       case 'movements':
         setMain(<Movements security={security}/>);
         break;
-      case 'configuration':
-        setMain(<Configuration security={security}/>);
+      case 'settings':
+        setMain(<Settings security={security}/>);
         break;
       default:
         setMain(<Home security={security}/>);
