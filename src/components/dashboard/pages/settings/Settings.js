@@ -23,7 +23,10 @@ const registerSchema = Yup.object().shape(
 );
 
 export default function Settings(props) {
-  const [user, setUser] = useState({name: '', lastname: '', dob: ''});
+
+  const [name, setName] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [dob, setDob] = useState('');
   const [accounts, setAccounts] = useState();
   const [categories, setCategories] = useState();
   const [subcategories, setSubcategories] = useState();
@@ -39,17 +42,10 @@ export default function Settings(props) {
     } else {
       userInfo(loggedIn, hashedId, id).then((response) => {
         if (response.status === 200 && response.data) {
-          let date = new Date(response.data.dob).getDate();
-          let month = new Date(response.data.dob).getMonth();
-          let year = new Date(response.data.dob).getFullYear();
           
-          let userInfo = {
-            name: response.data.name,
-            lastname: response.data.lastname,
-            dob: date + '/' + month + '/' + year
-          }
-
-          setUser(userInfo);
+          setName(response.data.name);
+          setLastname(response.data.lastname);
+          setDob(response.data.dob);
         } else {
           throw new Error(`[Error Obtaining User Info] ${response.data}`)
         }
@@ -57,7 +53,7 @@ export default function Settings(props) {
     }
   }, [loggedIn, hashedId, id, navigate]);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = (values) => {
     updateInfo(values.name, values.lastname, values.dob).then((response) => {
       if (response.status === 200) {
         console.log('User registered correctly');
@@ -72,19 +68,20 @@ export default function Settings(props) {
     })
   };
 
-  const formik = useFormik({
-    initialValues: {
-      name: user.name,
-      lastname: user.lastname,
-      dob: user.dob,
-      email: '',
-      password: ''
-    },
-    validationSchema: registerSchema,
-    onSubmit: handleSubmit
-  })
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    if (e.target.name === 'name') {
+      setName(input);
+    };
+    if (e.target.name === 'lastname'){
+      setLastname(input);
+    };
+    if (e.target.name === 'dob'){
+      setDob(input);
+    };
+  }
 
-  console.log(formik.initialValues.name)
+  console.log(dob)
 
   return (
     <Box sx={{
@@ -119,12 +116,10 @@ export default function Settings(props) {
               fullWidth
               id="name"
               label="Name"
+              InputLabelProps={{shrink: true}}
               name="name"
-              autoFocus
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              error={Boolean(formik.errors.name)}
-              helperText={formik.errors.email}
+              value={name}
+              onChange={handleInputChange}
             />
             <TextField
               margin="normal"
@@ -132,12 +127,10 @@ export default function Settings(props) {
               fullWidth
               id="lastname"
               label="Lastname"
+              InputLabelProps={{shrink: true}}
               name="lastname"
-              autoFocus
-              value={formik.values.lastname}
-              onChange={formik.handleChange}
-              // error={formik.touched.email && Boolean(formik.errors.name)}
-              // helperText={formik.touched.email && formik.errors.email}
+              value={lastname}
+              onChange={handleInputChange}
             />
             <TextField
               margin="normal"
@@ -145,12 +138,11 @@ export default function Settings(props) {
               fullWidth
               name="date"
               label="Birthday"
+              InputLabelProps={{shrink: true}}
               type="date"
               id="date"
-              value={formik.values.dob}
-              onChange={formik.handleChange}
-              // error={formik.touched.password && Boolean(formik.errors.password)}
-              // helperText={formik.touched.password && formik.errors.password}
+              value={dob}
+              onChange={handleInputChange}
             />
             <Button
               type="submit"

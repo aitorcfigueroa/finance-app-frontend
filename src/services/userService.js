@@ -14,7 +14,7 @@ export const userInfo = (token, hashid, id) => {
   return axios.get('/user/me', options)
 }
 
-export const userGlobalData = (token, hashid, id) => {
+export const userGlobalData = async (token, hashid, id) => {
   const options = {
     headers: {
       'x-access-token': token,
@@ -25,10 +25,10 @@ export const userGlobalData = (token, hashid, id) => {
     }
   }
 
-  return axios.get('/user/global', options)
+  return await axios.get('/user/global', options)
 }
 
-export const updateInfo = (token, hashid, id) => {
+export const updateInfo = async (token, hashid, id) => {
   const options = {
     headers: {
       'x-access-token': token,
