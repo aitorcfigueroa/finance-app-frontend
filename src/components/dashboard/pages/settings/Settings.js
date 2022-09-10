@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import dayjs, { Dayjs } from 'dayjs';
+import {es} from 'dayjs/locale/es';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Select from '@mui/material/Select';
@@ -6,6 +8,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useSessionStorage } from '../../../../hooks/useSessionStorage';
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -42,10 +47,16 @@ export default function Settings(props) {
     } else {
       userInfo(loggedIn, hashedId, id).then((response) => {
         if (response.status === 200 && response.data) {
-          
+          let newDate = new Date(response.data.dob);
+          let day = newDate.getDate().toString().length === 2 ? newDate.getDate() : `0${newDate.getDate()}`;
+          let month = newDate.getMonth() + 1;
+          let newMonth = month.toString().length === 2 ? month : `0${month}`;
+          let year = newDate.getFullYear();
+          let date = `${year}-${newMonth}-${day}`;
+
           setName(response.data.name);
           setLastname(response.data.lastname);
-          setDob(response.data.dob);
+          setDob(date);
         } else {
           throw new Error(`[Error Obtaining User Info] ${response.data}`)
         }
@@ -132,18 +143,16 @@ export default function Settings(props) {
               value={lastname}
               onChange={handleInputChange}
             />
-            <TextField
-              margin="normal"
-              size='small'
-              fullWidth
-              name="date"
-              label="Birthday"
-              InputLabelProps={{shrink: true}}
-              type="date"
-              id="date"
-              value={dob}
-              onChange={handleInputChange}
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'es'}>
+              <DesktopDatePicker
+                label="Birthday"
+                value={dob}
+                onChange={(newValue) => {
+                  setDob(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} margin='normal' size='small' InputLabelProps={{shrink: true}}/>}
+              />
+            </LocalizationProvider>
             <Button
               type="submit"
               fullWidth
