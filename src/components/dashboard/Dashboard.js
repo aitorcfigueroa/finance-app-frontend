@@ -24,120 +24,128 @@ const drawerWidth = 400;
 
 // TODO: Change this:
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+    shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
+    ...(open && {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
 }));
 
 const mdTheme = createTheme();
 
 function DashboardContent() {
 
-  const loggedIn = useSessionStorage('sessionJWTToken');
-  const hashedId = useSessionStorage('sessionId');
-  const { id } = useParams();
-  const navigate = useNavigate();
+    const loggedIn = useSessionStorage('sessionJWTToken');
+    const hashedId = useSessionStorage('sessionId');
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-  const security = {
-    loggedIn,
-    hashedId,
-    id
-  };
-  
-  useEffect(() => {
-    if(!loggedIn || !hashedId || !id) {
-      return navigate('/login');
-    } 
-  }, [loggedIn, hashedId, id, navigate]);
-  
-  const [main, setMain] = useState(<Home security={security}/>)
+    const security = {
+        loggedIn,
+        hashedId,
+        id
+    };
 
-  const handleClick = (event) => {
-    switch (event){
-      case 'home':
-        setMain(<Home security={security}/>);
-        break;
-      case 'details':
-        setMain(<Details security={security}/>);
-        break;
-      case 'movements':
-        setMain(<Movements security={security}/>);
-        break;
-      case 'settings':
-        setMain(<Settings security={security}/>);
-        break;
-      default:
-        setMain(<Home security={security}/>);
-        break;
-    }
-  }
+    useEffect(() => {
+        if (!loggedIn || !hashedId || !id) {
+            return navigate('/login');
+        }
+    }, [loggedIn, hashedId, id, navigate]);
 
-  return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute">
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Be Conscious Finance App
-            </Typography>
-            {/* TODO: change to black mode toggle */}
-            <IconButton color="inherit">
-              <Badge badgeContent={0} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Box sx={{ minWidth: 350}} >
-          <Toolbar />
-          <ProfileMenu clickHandler={handleClick}/>
-        </Box>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
-            {main}
-          </Container>
-          <Copyright />
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
+    const [main, setMain] = useState(<Home security={security} />)
+    const [activeButton, setActiveButton] = useState('home');
+
+    const handleClick = (event) => {
+        if (event !== activeButton) {
+            switch (event) {
+                case 'home':
+                    setMain(<Home security={security} />);
+                    setActiveButton('home');
+                    break;
+                case 'details':
+                    setMain(<Details security={security} />);
+                    setActiveButton('details');
+                    break;
+                case 'movements':
+                    setMain(<Movements security={security} />);
+                    setActiveButton('movements');
+                    break;
+                case 'settings':
+                    setMain(<Settings security={security} />);
+                    setActiveButton('settings');
+                    break;
+                default:
+                    setMain(<Home security={security} />);
+                    setActiveButton('home');
+                    break;
+            }
+        }
+    };
+
+    return (
+        <ThemeProvider theme={mdTheme}>
+            <Box sx={{ display: 'flex' }}>
+                <CssBaseline />
+                <AppBar position="absolute">
+                    <Toolbar
+                        sx={{
+                            pr: '24px', // keep right padding when drawer closed
+                        }}
+                    >
+                        <Typography
+                            component="h1"
+                            variant="h6"
+                            color="inherit"
+                            noWrap
+                            sx={{ flexGrow: 1 }}
+                        >
+                            Be Conscious Finance App
+                        </Typography>
+                        {/* TODO: change to black mode toggle */}
+                        <IconButton color="inherit">
+                            <Badge badgeContent={0} color="secondary">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                    </Toolbar>
+                </AppBar>
+                <Box sx={{ minWidth: 350 }} >
+                    <Toolbar />
+                    <ProfileMenu activeButton={activeButton} onButtonActivation={handleClick} />
+                </Box>
+                <Box
+                    component="main"
+                    sx={{
+                        backgroundColor: (theme) =>
+                            theme.palette.mode === 'light'
+                                ? theme.palette.grey[100]
+                                : theme.palette.grey[900],
+                        flexGrow: 1,
+                        height: '100vh',
+                        overflow: 'auto',
+                    }}
+                >
+                    <Toolbar />
+                    <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
+                        {main}
+                    </Container>
+                    <Copyright />
+                </Box>
+            </Box>
+        </ThemeProvider>
+    );
 }
 
 export default function Dashboard() {
-  return <DashboardContent />;
+    return <DashboardContent />;
 }

@@ -86,7 +86,7 @@ export default function ProfileSettings(props) {
           value={lastname}
           onChange={handleInputChange}
         />
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'es'}>
+        {/* <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'es'}>
           <DesktopDatePicker
             label="Birthday"
             value={dob}
@@ -95,7 +95,7 @@ export default function ProfileSettings(props) {
             }}
             renderInput={(params) => <TextField {...params} margin='normal' size='small' InputLabelProps={{shrink: true}}/>}
           />
-        </LocalizationProvider>
+        </LocalizationProvider> */}
         <Button
           type="submit"
           fullWidth

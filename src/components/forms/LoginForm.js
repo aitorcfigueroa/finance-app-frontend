@@ -74,21 +74,22 @@ export default function LoginForm() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square display='flex' justifyContent='center' paddingTop={'5rem'}>
           <Box
             sx={{
-              my: 8,
+              my: 12,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              maxWidth: '70%',
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Log in
             </Typography>
             <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -129,7 +130,7 @@ export default function LoginForm() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Log In
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -143,8 +144,8 @@ export default function LoginForm() {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
+            <Copyright sx={{ mt: 5 }} />
           </Box>
         </Grid>
       </Grid>
